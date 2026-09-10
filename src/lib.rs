@@ -1,5 +1,5 @@
 use color_eyre::Result;
-use eyre::eyre;
+use color_eyre::eyre::eyre;
 use steamworks::Client;
 
 #[derive(serde::Serialize)]

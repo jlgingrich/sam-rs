@@ -338,7 +338,6 @@ dependencies = [
  "clap",
  "color-eyre",
  "csv",
- "eyre",
  "serde",
  "serde_json",
  "steamworks",
