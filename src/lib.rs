@@ -12,12 +12,12 @@ pub struct Achievement {
 }
 
 /// Returns an iterator over all Steam achievements registered under the provided Steam app id
-pub fn get_achievements(client: Client) -> impl Iterator<Item = Achievement> {
+pub fn get_achievements(client: &Client) -> impl Iterator<Item = Achievement> {
     let user_stats = client.user_stats();
 
     user_stats
         .get_achievement_names()
-        .unwrap_or_else(|| Vec::new())
+        .unwrap_or_default()
         .into_iter()
         .map(move |internal_name| {
             let achievement_helper = user_stats.achievement(&internal_name);
@@ -35,7 +35,7 @@ pub fn get_achievements(client: Client) -> impl Iterator<Item = Achievement> {
             let is_obtained = achievement_helper.get().unwrap_or_default();
 
             Achievement {
-                internal_name: internal_name,
+                internal_name,
                 display_name: display_name.to_string(),
                 description: description.to_string(),
                 is_hidden,
@@ -44,38 +44,104 @@ pub fn get_achievements(client: Client) -> impl Iterator<Item = Achievement> {
         })
 }
 
-pub fn set_achievement(client: Client, internal_name: &str) -> Result<()> {
+/// TODO
+///
+/// # Arguments
+///
+/// - `client` (`&Client`) - An initialized Steam client.
+/// - `internal_name` (`&str`) - The internal name of the achievement.
+///
+/// # Returns
+///
+/// - `Result<()>` - Returns Ok if the  
+///
+/// # Errors
+///
+/// Describe possible errors.
+///
+/// # Examples
+///
+/// ```
+/// use crate::...;
+///
+/// let _ = set_achievement();
+/// ```
+pub fn set_achievement(client: &Client, internal_name: &str) -> Result<()> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);
 
     let result = achievement
         .set()
-        .map_err(|_| eyre!("Failed to set achievement"));
+        .map_err(|()| eyre!("Failed to set achievement"));
 
     user_stats
         .store_stats()
-        .map_err(|_| eyre!("Failed to store stats"))
-        .and(result.map(|_| println!("Successfully set achievement")))
+        .map_err(|()| eyre!("Failed to store stats"))
+        .and_then(|()| result.map(|()| println!("Successfully set achievement")))
 }
 
-pub fn clear_achievement(client: Client, internal_name: &str) -> Result<()> {
+/// TODO
+///
+/// # Arguments
+///
+/// - `client` (`&Client`) - Describe this parameter.
+/// - `internal_name` (`&str`) - Describe this parameter.
+///
+/// # Returns
+///
+/// - `Result<()>` - Describe the return value.
+///
+/// # Errors
+///
+/// Describe possible errors.
+///
+/// # Examples
+///
+/// ```
+/// use crate::...;
+///
+/// let _ = clear_achievement();
+/// ```
+pub fn clear_achievement(client: &Client, internal_name: &str) -> Result<()> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);
 
     let result = achievement
         .clear()
-        .map_err(|_| eyre!("Failed to clear achievement"));
+        .map_err(|()| eyre!("Failed to clear achievement"));
 
     user_stats
         .store_stats()
-        .map_err(|_| eyre!("Failed to store stats"))
-        .and(result.map(|_| println!("Successfully cleared achievement")))
+        .map_err(|()| eyre!("Failed to store stats"))
+        .and_then(|()| result.map(|()| println!("Successfully cleared achievement")))
 }
 
-pub fn get_achievement(client: Client, internal_name: &str) -> Result<bool> {
+/// TODO
+///
+/// # Arguments
+///
+/// - `client` (`&Client`) - Describe this parameter.
+/// - `internal_name` (`&str`) - Describe this parameter.
+///
+/// # Returns
+///
+/// - `Result<bool>` - Describe the return value.
+///
+/// # Errors
+///
+/// Describe possible errors.
+///
+/// # Examples
+///
+/// ```
+/// use crate::...;
+///
+/// let _ = get_achievement();
+/// ```
+pub fn get_achievement(client: &Client, internal_name: &str) -> Result<bool> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);
     achievement
         .get()
-        .map_err(|_| eyre!("Failed to get achievement state"))
+        .map_err(|()| eyre!("Failed to get achievement state"))
 }

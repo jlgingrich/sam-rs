@@ -26,10 +26,10 @@ enum ListFormat {
 impl fmt::Display for ListFormat {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            ListFormat::Raw => write!(f, "raw"),
-            ListFormat::Ssv => write!(f, "ssv"),
-            ListFormat::Csv => write!(f, "csv"),
-            ListFormat::Json => write!(f, "json"),
+            Self::Raw => write!(f, "raw"),
+            Self::Ssv => write!(f, "ssv"),
+            Self::Csv => write!(f, "csv"),
+            Self::Json => write!(f, "json"),
         }
     }
 }
@@ -72,7 +72,7 @@ fn main() -> Result<()> {
 
     match command {
         Commands::ListAchievements { format } => {
-            let achievement_data = sam_rs::get_achievements(client);
+            let achievement_data = sam_rs::get_achievements(&client);
 
             match format {
                 ListFormat::Raw | ListFormat::Ssv => print_as_ssv(achievement_data)?,
@@ -81,13 +81,13 @@ fn main() -> Result<()> {
             }
         }
         Commands::SetAchievement { internal_name } => {
-            sam_rs::set_achievement(client, &internal_name)?
+            sam_rs::set_achievement(&client, &internal_name)?;
         }
         Commands::ClearAchievement { internal_name } => {
-            sam_rs::clear_achievement(client, &internal_name)?
+            sam_rs::clear_achievement(&client, &internal_name)?;
         }
         Commands::GetAchievement { internal_name } => {
-            println!("{}", sam_rs::get_achievement(client, &internal_name)?)
+            println!("{}", sam_rs::get_achievement(&client, &internal_name)?);
         }
     }
 
