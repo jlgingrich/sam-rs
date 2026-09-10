@@ -9,5 +9,20 @@
         ".devenv": true,
         "devenv.yaml": true,
         ".pre-commit-config.yaml": true
-    }
+    },
+    "todo-tree.regex.regex": "((//|#|<!--|;|/\\*|^)\\s*($TAGS)|($TAGS)!.*)|todo!()",
+    "todo-tree.regex.regexCaseSensitive": true,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]",
+    ],
+    "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules/*/**",
+        "**/.vscode/**"
+    ],
 }
