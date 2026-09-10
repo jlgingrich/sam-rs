@@ -80,7 +80,7 @@ pub fn set_achievement(client: &Client, internal_name: &str) -> Result<()> {
         .and_then(|()| result.map(|()| println!("Successfully set achievement")))
 }
 
-/// TODO
+/// Tries to set the achievement as uncompleted
 ///
 /// # Arguments
 ///
@@ -108,7 +108,7 @@ pub fn clear_achievement(client: &Client, internal_name: &str) -> Result<()> {
         .and_then(|()| result.map(|()| println!("Successfully cleared achievement")))
 }
 
-/// TODO
+/// Tries to get the state of the achivement
 ///
 /// # Arguments
 ///
