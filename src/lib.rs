@@ -11,7 +11,15 @@ pub struct Achievement {
     pub user_has_obtained: bool,
 }
 
-/// Returns an iterator over all Steam achievements registered under the provided Steam app id
+/// Returns the list of achievements registered to the connected Steam app.
+///
+/// # Arguments
+///
+/// - `client` (`&Client`) - An initialized connection to the Steam client.
+///
+/// # Returns
+///
+/// - `impl Iterator<Item = Achievement>` - An iterator over the available achievements.
 pub fn get_achievements(client: &Client) -> impl Iterator<Item = Achievement> {
     let user_stats = client.user_stats();
 
@@ -44,28 +52,20 @@ pub fn get_achievements(client: &Client) -> impl Iterator<Item = Achievement> {
         })
 }
 
-/// TODO
+/// Tries to set the achievement as completed
 ///
 /// # Arguments
 ///
-/// - `client` (`&Client`) - An initialized Steam client.
-/// - `internal_name` (`&str`) - The internal name of the achievement.
+/// - `client` (`&Client`) - An initialized connection to the Steam client.
+/// - `internal_name` (`&str`) - Steam's internal name for the achievement.
 ///
 /// # Returns
 ///
-/// - `Result<()>` - Returns Ok if the  
+/// - `Result<()>` - If successful, unit.
 ///
 /// # Errors
 ///
-/// Describe possible errors.
-///
-/// # Examples
-///
-/// ```
-/// use crate::...;
-///
-/// let _ = set_achievement();
-/// ```
+/// This function will error if the connection to the Steam client is lost.
 pub fn set_achievement(client: &Client, internal_name: &str) -> Result<()> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);
@@ -84,24 +84,16 @@ pub fn set_achievement(client: &Client, internal_name: &str) -> Result<()> {
 ///
 /// # Arguments
 ///
-/// - `client` (`&Client`) - Describe this parameter.
-/// - `internal_name` (`&str`) - Describe this parameter.
+/// - `client` (`&Client`) - An initialized connection to the Steam client.
+/// - `internal_name` (`&str`) - Steam's internal name for the achievement.
 ///
 /// # Returns
 ///
-/// - `Result<()>` - Describe the return value.
+/// - `Result<()>` - If successful, unit.
 ///
 /// # Errors
 ///
-/// Describe possible errors.
-///
-/// # Examples
-///
-/// ```
-/// use crate::...;
-///
-/// let _ = clear_achievement();
-/// ```
+/// This function will error if the connection to the Steam client is lost.
 pub fn clear_achievement(client: &Client, internal_name: &str) -> Result<()> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);
@@ -120,24 +112,16 @@ pub fn clear_achievement(client: &Client, internal_name: &str) -> Result<()> {
 ///
 /// # Arguments
 ///
-/// - `client` (`&Client`) - Describe this parameter.
-/// - `internal_name` (`&str`) - Describe this parameter.
+/// - `client` (`&Client`) - An initialized connection to the Steam client.
+/// - `internal_name` (`&str`) - Steam's internal name for the achievement.
 ///
 /// # Returns
 ///
-/// - `Result<bool>` - Describe the return value.
+/// - `Result<bool>` - If successful, the current state of the achievement.
 ///
 /// # Errors
 ///
-/// Describe possible errors.
-///
-/// # Examples
-///
-/// ```
-/// use crate::...;
-///
-/// let _ = get_achievement();
-/// ```
+/// This function will error if the connection to the Steam client is lost.
 pub fn get_achievement(client: &Client, internal_name: &str) -> Result<bool> {
     let user_stats = client.user_stats();
     let achievement = user_stats.achievement(internal_name);

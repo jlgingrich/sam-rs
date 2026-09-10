@@ -6,7 +6,7 @@ use std::io::Write;
 
 use steamworks::Client;
 
-/// Simple Achievement Manager, now in Rust!
+/// Steam Achievement Manager, now in Rust!
 #[derive(Debug, Parser)]
 #[command(name = "sam")]
 struct Cli {
