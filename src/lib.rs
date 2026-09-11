@@ -1,3 +1,5 @@
+use std::fmt;
+
 use color_eyre::Result;
 use color_eyre::eyre::eyre;
 use steamworks::Client;
@@ -9,6 +11,12 @@ pub struct Achievement {
     pub description: String,
     pub is_hidden: bool,
     pub user_has_obtained: bool,
+}
+
+impl fmt::Display for Achievement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} ({})", self.display_name, self.internal_name)
+    }
 }
 
 /// Returns the list of achievements registered to the connected Steam app.

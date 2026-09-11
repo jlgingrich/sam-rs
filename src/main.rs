@@ -1,8 +1,13 @@
 use clap::{Parser, Subcommand, ValueEnum};
 use color_eyre::Result;
+use color_eyre::eyre::Context;
+use gag::Gag;
+use inquire::{Confirm, Select};
+use sam_rs::get_achievements;
 use serde::Serialize;
 use std::fmt;
 use std::io::Write;
+use std::process::exit;
 
 use steamworks::Client;
 
@@ -60,6 +65,8 @@ enum Commands {
         /// Name for achievement used internally by Steam
         internal_name: String,
     },
+    /// Open an interactive achievement picker
+    Interactive {},
 }
 
 fn main() -> Result<()> {
@@ -68,7 +75,10 @@ fn main() -> Result<()> {
     let args = Cli::parse();
     let command = args.command;
 
-    let client = Client::init_app(args.app_id)?;
+    let client = {
+        let _gag_stderr = Gag::stderr().context("Failed to install gag during client init")?;
+        Client::init_app(args.app_id)?
+    };
 
     match command {
         Commands::ListAchievements { format } => {
@@ -88,6 +98,31 @@ fn main() -> Result<()> {
         }
         Commands::GetAchievement { internal_name } => {
             println!("{}", sam_rs::get_achievement(&client, &internal_name)?);
+        }
+        Commands::Interactive {} => {
+            println!("Current app id: {}", client.utils().app_id().0);
+            println!("Signed in as {}", client.friends().name());
+            let ans = Confirm::new("Does this information look correct?")
+                .with_default(false)
+                .prompt()?;
+
+            if !ans {
+                exit(0);
+            }
+
+            let achievements = get_achievements(&client).collect();
+
+            let selected_achievement =
+                Select::new("Select an achievement to manage", achievements).prompt()?;
+
+            let selected_action =
+                Select::new("What would you like to do?", vec!["Set", "Clear"]).prompt()?;
+
+            match selected_action {
+                "Set" => sam_rs::set_achievement(&client, &selected_achievement.internal_name)?,
+                "Clear" => sam_rs::clear_achievement(&client, &selected_achievement.internal_name)?,
+                _ => (),
+            }
         }
     }
 
