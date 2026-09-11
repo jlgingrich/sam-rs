@@ -65,7 +65,7 @@ enum Commands {
         /// Name for achievement used internally by Steam
         internal_name: String,
     },
-    /// Open an interactive achievement picker
+    /// Run an interactive tool to manipulate achievements
     Interactive {},
 }
 
